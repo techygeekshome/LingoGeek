@@ -1,0 +1,84 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller==6.11.1
+
+      - name: Check the sentence splitter
+        run: python -m unittest discover -s tests -v
+
+      - name: Build the icon
+        run: python packaging/make_icon.py
+
+      - name: Build
+        run: pyinstaller --noconfirm --clean packaging/lingogeek.spec
+
+      # The two checks below exist because ShortGeek 1.0.0 and 1.0.1 both shipped
+      # unable to start. A build check that only looks for files on disk proves
+      # nothing about whether the thing runs.
+      - name: Run the packaged app and ask it for a page
+        shell: pwsh
+        run: |
+          function Invoke-Check([string]$label, [bool]$noStreams) {
+            Write-Host "--- $label ---"
+            $env:LINGOGEEK_NO_WINDOW = "1"
+            if ($noStreams) { $env:LINGOGEEK_NO_STREAMS = "1" } else { Remove-Item Env:LINGOGEEK_NO_STREAMS -ErrorAction SilentlyContinue }
+
+            # No redirection. Redirecting output hands the app the very streams
+            # whose absence is the bug being tested for.
+            $p = Start-Process -FilePath "dist\LingoGeek\LingoGeek.exe" -WindowStyle Hidden -PassThru
+            Start-Sleep -Seconds 25
+
+            $out = "$env:LOCALAPPDATA\TechyGeeksHome\LingoGeek\output.txt"
+            $err = "$env:LOCALAPPDATA\TechyGeeksHome\LingoGeek\startup-error.txt"
+            if (Test-Path $err) {
+              Write-Host "startup-error.txt:"; Get-Content $err
+              if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+              throw "$label - the app failed to start"
+            }
+            if (-not (Test-Path $out)) {
+              if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+              throw "$label - the app never printed its address"
+            }
+            $url = (Select-String -Path $out -Pattern 'http://127\.0\.0\.1:\d+/').Matches[0].Value
+            Write-Host "address: $url"
+            $r = Invoke-WebRequest -Uri "${url}api/health" -UseBasicParsing -TimeoutSec 30
+            if ($r.StatusCode -ne 200) { throw "$label - health check returned $($r.StatusCode)" }
+            Write-Host "health: $($r.Content)"
+            $page = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 30
+            if ($page.Content -notmatch 'LingoGeek') { throw "$label - the page did not render" }
+            if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+            Remove-Item $out -ErrorAction SilentlyContinue
+            Write-Host "$label - OK"
+          }
+
+          Invoke-Check 'with a console' $false
+          Invoke-Check 'with no console, as a user gets it' $true
+
+      - name: Build the installer
+        run: |
+          iscc /DMyAppVersion=${{ github.ref_type == 'tag' && github.ref_name || '1.0.0' }} packaging\lingogeek.iss
+        shell: cmd
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LingoGeekSetup
+          path: packaging/Output/LingoGeekSetup.exe
