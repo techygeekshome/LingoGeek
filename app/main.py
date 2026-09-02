@@ -14,6 +14,7 @@ from pydantic import BaseModel
 
 from lingogeek.documents import SUPPORTED, translate_file
 from lingogeek.engine import LanguagePair, ModelStore, Translator
+from app.version import APP_VERSION
 
 HERE = Path(__file__).resolve().parent
 
@@ -161,4 +162,4 @@ def remove_model(key: str) -> dict:
 
 @app.get("/api/health")
 def health() -> dict:
-    return {"ok": True, "supported": sorted(SUPPORTED)}
+    return {"ok": True, "version": APP_VERSION, "supported": sorted(SUPPORTED)}
