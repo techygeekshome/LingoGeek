@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>lingogeek</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>LingoGeek</title>
     <authors>TechyGeeksHome</authors>
     <owners>techygeekshome</owners>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <licenseUrl>https://github.com/techygeekshome/LingoGeek/blob/main/LICENSE</licenseUrl>
     <projectUrl>https://techygeekshome.info/lingogeek/</projectUrl>
-    <iconUrl>https://cdn.jsdelivr.net/gh/techygeekshome/LingoGeek@v1.0.0/icons/lingogeek-256.png</iconUrl>
+    <iconUrl>https://cdn.jsdelivr.net/gh/techygeekshome/LingoGeek@v1.0.1/icons/lingogeek-256.png</iconUrl>
     <description>LingoGeek translates whole documents on your own machine. No account, no character limit,
 and nothing is uploaded.
 
@@ -23,7 +23,7 @@ and nothing is uploaded.
 
 Free at home and at work. Everything it needs is inside the installer.</description>
     <summary>Free offline document translator for Windows: Word, PDF, subtitles and text</summary>
-    <releaseNotes>https://github.com/techygeekshome/LingoGeek/releases/tag/v1.0.0</releaseNotes>
+    <releaseNotes>https://github.com/techygeekshome/LingoGeek/releases/tag/v1.0.1</releaseNotes>
     <copyright>Copyright (c) 2026 TechyGeeksHome</copyright>
     <tags>lingogeek translation translator document docx pdf subtitles srt vtt offline windows</tags>
     <projectSourceUrl>https://github.com/techygeekshome/LingoGeek</projectSourceUrl>
