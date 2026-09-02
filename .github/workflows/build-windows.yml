@@ -8,10 +8,8 @@ on:
         required: false
         default: ''
   push:
-    branches: [main]
     tags:
       - 'v*'
-  pull_request:
 
 permissions:
   contents: write
