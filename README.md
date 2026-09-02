@@ -57,9 +57,9 @@ you no longer want.
 
 ## Requirements
 
-Windows 10 or 11, 64-bit. Standard user rights: administrator is only needed to install it.
-Nothing else to install first, and no internet connection is needed except to fetch a language
-pack the first time you use it.
+Windows 10 or 11, 64-bit. It installs for the current user, so no administrator password is
+needed. Nothing else to install first, and no internet connection is needed except to fetch a
+language pack the first time you use it.
 
 ## Download
 
