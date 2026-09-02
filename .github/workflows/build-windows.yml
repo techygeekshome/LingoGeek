@@ -122,6 +122,12 @@ jobs:
           $inst = Get-Item packaging\Output\LingoGeekSetup.exe
           Write-Host ("Installer is {0:N1} MB" -f ($inst.Length / 1MB))
 
+      - name: Checksum
+        shell: pwsh
+        run: |
+          $h = (Get-FileHash packaging\Output\LingoGeekSetup.exe -Algorithm SHA256).Hash.ToLower()
+          Write-Host "SHA256 $h"
+
       - name: Upload the installer
         uses: actions/upload-artifact@v4
         with:
