@@ -65,6 +65,85 @@ def _translate_plain(job: Job, translate, progress=None) -> None:
     job.output.write_text("".join(out), encoding="utf-8")
 
 
+# ------------------------------------------------------------------- markdown
+# Markdown carries its structure in the first few characters of a line. Hand a
+# heading to a translation model with its hashes still attached and the model
+# will sometimes translate the hashes away, which silently demotes a heading to
+# a paragraph. So the syntax comes off, the words go through on their own, and
+# the syntax goes back on.
+_MD_PREFIX = re.compile(r"^(\s*(?:>\s*)*(?:[-*+]\s+|\d+[.)]\s+|#{1,6}\s+)?)(.*)$")
+_MD_FENCE = re.compile(r"^\s*(```|~~~)")
+_MD_RULE = re.compile(r"^\s*([-*_])(\s*\1){2,}\s*$")
+_MD_URL = re.compile(r"(\]\()([^)\s]+)(\))")
+
+
+def _translate_markdown(job: Job, translate, progress=None) -> None:
+    lines = job.source.read_text(encoding="utf-8", errors="replace").splitlines()
+
+    fenced, in_fence = [], False
+    for line in lines:
+        if _MD_FENCE.match(line):
+            in_fence = not in_fence
+            fenced.append(True)
+            continue
+        fenced.append(in_fence)
+
+    def translatable(i: int, line: str) -> bool:
+        if fenced[i] or not line.strip():
+            return False
+        if _MD_RULE.match(line):
+            return False
+        return bool(_MD_PREFIX.match(line).group(2).strip())
+
+    # A soft-wrapped paragraph is one paragraph, not three sentences. Translating
+    # each line on its own capitalises mid-sentence and loses the thread, so runs
+    # of plain prose lines are joined and go through as a single unit.
+    units: list[tuple[str, str, list[int]]] = []   # prefix, body, source line numbers
+    for i, line in enumerate(lines):
+        if not translatable(i, line):
+            units.append(("", line, [i]))
+            continue
+        prefix, body = _MD_PREFIX.match(line).groups()
+        if prefix == "" and units and units[-1][0] == "" and units[-1][2][-1] == i - 1 \
+                and translatable(units[-1][2][-1], lines[units[-1][2][-1]]):
+            head, prev, idx = units[-1]
+            units[-1] = (head, prev + " " + body.strip(), idx + [i])
+        else:
+            units.append((prefix, body, [i]))
+
+    job.blocks = sum(1 for pre, body, idx in units if translatable(idx[0], lines[idx[0]]))
+
+    out, done = [], 0
+    for prefix, body, idx in units:
+        if not translatable(idx[0], lines[idx[0]]):
+            out.append(body)
+            continue
+
+        # Link and image targets are not prose. Park them, translate, put back.
+        urls: list[str] = []
+
+        def park(m: re.Match) -> str:
+            urls.append(m.group(2))
+            return f"{m.group(1)}\u0000{len(urls) - 1}\u0000{m.group(3)}"
+
+        body = _MD_URL.sub(park, body)
+        body = translate(body)
+        for n, url in enumerate(urls):
+            body = body.replace(f"\u0000{n}\u0000", url)
+
+        out.append(prefix + body)
+        done += 1
+        job.translated = done
+        if progress:
+            progress(done, job.blocks)
+
+    text = "\n".join(out)
+    if lines and job.source.read_text(encoding="utf-8", errors="replace").endswith("\n"):
+        text += "\n"
+    job.output = output_path(job.source, job.target_code)
+    job.output.write_text(text, encoding="utf-8")
+
+
 # ------------------------------------------------------------------ subtitles
 _SRT_TIME = re.compile(r"^\d{1,2}:\d{2}:\d{2}[,.]\d{1,3}\s*-->")
 
@@ -207,7 +286,7 @@ def _translate_pdf(job: Job, translate, progress=None) -> None:
 # --------------------------------------------------------------------- router
 _HANDLERS = {
     ".txt": _translate_plain,
-    ".md": _translate_plain,
+    ".md": _translate_markdown,
     ".srt": _translate_subtitles,
     ".vtt": _translate_subtitles,
     ".docx": _translate_docx,
