@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XML_DIZ_INFO>
+  <MASTER_PAD_VERSION_INFO>
+    <MASTER_PAD_VERSION>4.0</MASTER_PAD_VERSION>
+    <MASTER_PAD_EDITOR>TechyGeeksHome</MASTER_PAD_EDITOR>
+    <MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products.</MASTER_PAD_INFO>
+  </MASTER_PAD_VERSION_INFO>
+  <Company_Info>
+    <Company_Name>TechyGeeksHome</Company_Name>
+    <Address_1></Address_1>
+    <Address_2></Address_2>
+    <City_Town></City_Town>
+    <State_Province></State_Province>
+    <Zip_Postal_Code></Zip_Postal_Code>
+    <Country>United Kingdom</Country>
+    <Company_WebSite_URL>https://techygeekshome.info</Company_WebSite_URL>
+    <Contact_Info>
+      <Author_First_Name>Andy</Author_First_Name>
+      <Author_Last_Name>Armstrong</Author_Last_Name>
+      <Author_Email>techygeeks@outlook.com</Author_Email>
+      <Contact_First_Name>Andy</Contact_First_Name>
+      <Contact_Last_Name>Armstrong</Contact_Last_Name>
+      <Contact_Email>techygeeks@outlook.com</Contact_Email>
+    </Contact_Info>
+    <Support_Info>
+      <Sales_Email>techygeeks@outlook.com</Sales_Email>
+      <Support_Email>techygeeks@outlook.com</Support_Email>
+      <General_Email>techygeeks@outlook.com</General_Email>
+    </Support_Info>
+  </Company_Info>
+  <Program_Info>
+    <Program_Name>LingoGeek</Program_Name>
+    <Program_Version>1.0.0</Program_Version>
+    <Program_Release_Month>09</Program_Release_Month>
+    <Program_Release_Day>02</Program_Release_Day>
+    <Program_Release_Year>2026</Program_Release_Year>
+    <Program_Cost_Dollars>0</Program_Cost_Dollars>
+    <Program_Type>Freeware</Program_Type>
+    <Program_Release_Status>New Release</Program_Release_Status>
+    <Program_Install_Support>Install and Uninstall</Program_Install_Support>
+    <Program_OS_Support>Win10,Win11</Program_OS_Support>
+    <Program_Language>English</Program_Language>
+    <Program_Change_Info>First public release.</Program_Change_Info>
+    <Program_Specific_Category>Business::Word Processing</Program_Specific_Category>
+    <Program_Category_Class>Business</Program_Category_Class>
+    <Program_System_Requirements>Windows 10 or 11, 64-bit. It installs for the current user, so no administrator password is needed. Everything it needs is in the installer.</Program_System_Requirements>
+    <File_Info>
+      <File_Size_Bytes>38168576</File_Size_Bytes>
+      <File_Size_K>37274</File_Size_K>
+      <File_Size_MB>36</File_Size_MB>
+    </File_Info>
+    <Expire_Info>
+      <Has_Expire_Info>N</Has_Expire_Info>
+    </Expire_Info>
+  </Program_Info>
+  <Program_Descriptions>
+    <English>
+      <Keywords>document translator, offline translator, translate word document, translate pdf, subtitle translation, srt, vtt, docx, machine translation, free, windows</Keywords>
+      <Char_Desc_45>Translate whole documents offline, free</Char_Desc_45>
+      <Char_Desc_80>Translates Word files, PDFs and subtitles on your own machine, with no limit</Char_Desc_80>
+      <Char_Desc_250>LingoGeek translates Word documents, PDFs, subtitles, Markdown and plain text on your own machine. Headings, lists and tables keep their place, subtitle timings are untouched, and your original is never overwritten. No account, no character limit.</Char_Desc_250>
+      <Char_Desc_450>LingoGeek is a free document translator for Windows that works on your own machine. Drop in a Word file, a PDF, an SRT or VTT subtitle file, Markdown or plain text, pick a language pair, and it writes a translated copy beside the original. Word structure survives: headings, bullet lists, tables, headers and footers. Subtitle timings are copied through exactly. Language packs download once and then work with no connection. No account, no character limit, nothing uploaded.</Char_Desc_450>
+      <Char_Desc_2000>LingoGeek translates whole documents on your own machine.
+
+The free document translators all run out in the same place. DeepL allows one document a month on its free tier, up to five megabytes. Google will do more, but the file goes to Google. Most of the free offline alternatives only take pasted text, which is no use when the thing you need translated is a forty page contract.
+
+LingoGeek takes the file itself. Word documents, PDFs, SRT and VTT subtitles, Markdown and plain text all go in, and a translated copy is written next to the original. Nothing is overwritten, and if the name is already taken it adds a number rather than replacing anything.
+
+Word documents keep their structure. Headings stay headings, bullet lists stay lists, tables keep their cells, and headers and footers are translated too. Formatting that changes part way through a sentence does not survive, because translation moves the words, and the app reports how many paragraphs that affected rather than losing it quietly.
+
+PDFs are read as text and written out as an editable Word document. Rebuilding a PDF layout around text of a different length produces overlapping lines, so a clean document is offered instead. Scanned PDFs with no text layer need OCR first, and LingoGeek says so rather than producing an empty file.
+
+Subtitles come back with every cue number and timestamp copied through exactly. Only the spoken lines change.
+
+Around a hundred language pairs are available, from the openly licensed Argos and OPUS-MT collections. A pack is downloaded the first time you use it, between forty and eighty megabytes, and works offline from then on. You can see what is installed, how much space it is using, and remove anything you have finished with.
+
+No account, no sign-up, no subscription, no character allowance and no telemetry. Free at home and at work.</Char_Desc_2000>
+    </English>
+  </Program_Descriptions>
+  <Web_Info>
+    <Application_URLs>
+      <Application_Info_URL>https://techygeekshome.info/lingogeek/</Application_Info_URL>
+      <Application_Order_URL></Application_Order_URL>
+      <Application_Screenshot_URL>https://techygeekshome.info/wp-content/uploads/2026/09/lingogeek.png</Application_Screenshot_URL>
+      <Application_Icon_URL>https://techygeekshome.info/wp-content/uploads/2026/09/lingogeek.png</Application_Icon_URL>
+      <Application_XML_File_URL>https://raw.githubusercontent.com/techygeekshome/LingoGeek/main/pad/lingogeek.xml</Application_XML_File_URL>
+    </Application_URLs>
+    <Download_URLs>
+      <Primary_Download_URL>https://github.com/techygeekshome/LingoGeek/releases/latest/download/LingoGeekSetup.exe</Primary_Download_URL>
+      <Secondary_Download_URL></Secondary_Download_URL>
+    </Download_URLs>
+  </Web_Info>
+</XML_DIZ_INFO>
