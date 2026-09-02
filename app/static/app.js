@@ -15,20 +15,28 @@ async function loadLanguages() {
   const data = await r.json();
   PAIRS = data.pairs;
 
+  // This runs again every time the queue empties, to pick up a pack that was
+  // just downloaded. Whatever the person had chosen must survive that, or the
+  // language quietly changes under them between one batch and the next.
+  const hadFrom = $("from").value;
+  const hadTo = $("to").value;
+
   const froms = [...new Map(PAIRS.map((p) => [p.from_code, p.from_name])).entries()]
     .sort((a, b) => a[1].localeCompare(b[1]));
   $("from").innerHTML = froms.map(([c, n]) => `<option value="${c}">${n}</option>`).join("");
-  $("from").value = froms.some(([c]) => c === "en") ? "en" : froms[0][0];
+  if (hadFrom && froms.some(([c]) => c === hadFrom)) $("from").value = hadFrom;
+  else $("from").value = froms.some(([c]) => c === "en") ? "en" : froms[0][0];
 
   if (data.installed_bytes) $("disk").textContent = `${bytes(data.installed_bytes)} of language packs`;
-  fillTargets();
+  fillTargets(hadTo);
 }
 
-function fillTargets() {
+function fillTargets(keep) {
   const from = $("from").value;
   const targets = PAIRS.filter((p) => p.from_code === from)
     .sort((a, b) => a.to_name.localeCompare(b.to_name));
   $("to").innerHTML = targets.map((p) => `<option value="${p.to_code}">${p.to_name}</option>`).join("");
+  if (keep && targets.some((p) => p.to_code === keep)) $("to").value = keep;
   showPack();
 }
 
@@ -66,8 +74,14 @@ function render(items) {
     const pct = i.total_blocks ? Math.round((i.done_blocks / i.total_blocks) * 100) : 0;
     const label = {
       waiting: "waiting",
-      downloading: `downloading the language pack ${pct}%`,
-      working: `translating ${i.done_blocks} of ${i.total_blocks}`,
+      downloading: i.total_blocks
+        ? `downloading the language pack ${pct}%`
+        : "downloading the language pack",
+      // total_blocks is 0 until the handler has counted the file, which is a
+      // moment or two on a large document. "0 of 0" reads like a fault.
+      working: i.total_blocks
+        ? `translating ${i.done_blocks} of ${i.total_blocks}`
+        : "translating",
       done: i.message || "done",
       failed: i.message || "failed",
     }[i.state] || i.state;
@@ -109,7 +123,7 @@ drop.addEventListener("drop", (ev) => {
   if (paths.length) send(paths);
 });
 
-$("from").addEventListener("change", fillTargets);
+$("from").addEventListener("change", () => fillTargets());
 $("to").addEventListener("change", showPack);
 
 loadLanguages();
