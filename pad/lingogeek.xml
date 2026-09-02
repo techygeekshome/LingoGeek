@@ -30,7 +30,7 @@
   </Company_Info>
   <Program_Info>
     <Program_Name>LingoGeek</Program_Name>
-    <Program_Version>1.0.0</Program_Version>
+    <Program_Version>1.0.1</Program_Version>
     <Program_Release_Month>09</Program_Release_Month>
     <Program_Release_Day>02</Program_Release_Day>
     <Program_Release_Year>2026</Program_Release_Year>
@@ -40,7 +40,7 @@
     <Program_Install_Support>Install and Uninstall</Program_Install_Support>
     <Program_OS_Support>Win10,Win11</Program_OS_Support>
     <Program_Language>English</Program_Language>
-    <Program_Change_Info>First public release.</Program_Change_Info>
+    <Program_Change_Info>Markdown headings, code blocks and link targets are now protected from the translator, and the chosen language no longer resets when a batch finishes.</Program_Change_Info>
     <Program_Specific_Category>Business::Word Processing</Program_Specific_Category>
     <Program_Category_Class>Business</Program_Category_Class>
     <Program_System_Requirements>Windows 10 or 11, 64-bit. It installs for the current user, so no administrator password is needed. Everything it needs is in the installer.</Program_System_Requirements>
