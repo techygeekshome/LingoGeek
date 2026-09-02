@@ -50,6 +50,6 @@ exe = EXE(
     exclude_binaries=True,
     name="LingoGeek",
     console=False,
-    icon=str(ROOT / "packaging" / "lingogeek.ico"),
+    icon=str(ROOT / "icons" / "lingogeek.ico"),
 )
 coll = COLLECT(exe, a.binaries, a.datas, name="LingoGeek")
