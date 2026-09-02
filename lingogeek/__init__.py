@@ -1,1 +1,1 @@
-LingoGeek package.
+"""LingoGeek package."""
