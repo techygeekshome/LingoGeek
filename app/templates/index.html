@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LingoGeek</title>
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<header class="bar">
+  <div class="brand">
+    <img src="/static/icon.png" alt="" width="26" height="26">
+    <div><strong>LingoGeek</strong><span>by TechyGeeksHome</span></div>
+  </div>
+  <div class="bar-right"><span id="disk" class="muted"></span></div>
+</header>
+
+<main>
+  <section class="panel">
+    <h1>Translate a document</h1>
+    <p class="lead">Drop in a Word document, a PDF, a subtitle file or plain text. The translated
+      copy is written beside the original. Nothing is uploaded, there is no character limit and
+      there is no account.</p>
+
+    <div class="row">
+      <label>From
+        <select id="from"></select>
+      </label>
+      <label>Into
+        <select id="to"></select>
+      </label>
+      <span id="packstate" class="pill"></span>
+    </div>
+
+    <div id="drop" class="drop">
+      <p><strong>Drop files here</strong> or click to choose</p>
+      <p class="muted">.docx &middot; .pdf &middot; .srt &middot; .vtt &middot; .txt &middot; .md</p>
+      <input id="picker" type="file" multiple hidden>
+    </div>
+
+    <p id="note" class="muted"></p>
+  </section>
+
+  <section class="panel" id="queuepanel" hidden>
+    <h2>Queue</h2>
+    <ul id="queue" class="queue"></ul>
+  </section>
+
+  <section class="panel">
+    <h2>What it does with each kind of file</h2>
+    <dl class="facts">
+      <dt>Word (.docx)</dt><dd>Headings, lists, tables, headers and footers all keep their place. Formatting that changes part way through a sentence does not survive, because translation moves the words.</dd>
+      <dt>PDF</dt><dd>Read as text and written out as a Word document. A PDF's layout cannot be rebuilt around text that is now a different length, and pretending otherwise produces a mess.</dd>
+      <dt>Subtitles (.srt, .vtt)</dt><dd>Only the spoken lines change. Timings and cue numbers are copied through exactly.</dd>
+      <dt>Text and Markdown</dt><dd>Paragraph breaks are kept as they were.</dd>
+    </dl>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
