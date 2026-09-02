@@ -1,15 +1,17 @@
 <div align="center">
 
-<img src="icons/lingogeek-128.png" width="96" alt="">
+<img src="icons/lingogeek-256.png" alt="LingoGeek logo" width="96" height="96">
 
 # LingoGeek
 
 **Translate a document on your own machine. No account, no character limit, nothing uploaded.**
 
-![Build](https://github.com/techygeekshome/LingoGeek/actions/workflows/build-windows.yml/badge.svg)
-![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078d4)
-![License](https://img.shields.io/badge/License-GPL--3.0-blue)
-![Made by TechyGeeksHome](https://img.shields.io/badge/made%20by-TechyGeeksHome-b191f2)
+[![Build](https://github.com/techygeekshome/LingoGeek/actions/workflows/build-windows.yml/badge.svg)](https://github.com/techygeekshome/LingoGeek/actions/workflows/build-windows.yml)
+[![Version](https://img.shields.io/github/v/release/techygeekshome/LingoGeek?label=version&color=4c9bff)](https://github.com/techygeekshome/LingoGeek/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078d4)](#download)
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue)](LICENSE)
+[![Made by TechyGeeksHome](https://img.shields.io/badge/made%20by-TechyGeeksHome-b191f2)](https://techygeekshome.info)
+[![Support on Ko-fi](https://img.shields.io/badge/support-Ko--fi-ff5e5b)](https://ko-fi.com/techygeekshome)
 
 [Download](#download) · [What it does](#what-it-does) · [Formats](#what-it-does-with-each-kind-of-file) · [Languages](#languages) · [Requirements](#requirements)
 
@@ -79,6 +81,11 @@ python desktop.py
 packs from the [Argos](https://github.com/argosopentech/argos-translate) collection. Argos itself is
 not a dependency: it requires stanza, which requires torch, which is about 2.5 GB for the sake of
 deciding where sentences end. LingoGeek does that part itself.
+
+## Support
+
+LingoGeek is free and always will be. If it saved you a subscription, you can
+[buy us a coffee on Ko-fi](https://ko-fi.com/techygeekshome). Welcome, but never expected.
 
 ## Licence
 
