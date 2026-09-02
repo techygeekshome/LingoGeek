@@ -1,20 +1,61 @@
-name: Build
+name: Build Windows installer
 
 on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Attach the installer to this existing release tag, e.g. v1.0.0. Leave blank to just build.'
+        required: false
+        default: ''
   push:
     branches: [main]
+    tags:
+      - 'v*'
   pull_request:
-  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
+
+      - name: Work out the version
+        id: ver
+        shell: pwsh
+        env:
+          INPUT_RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          if ($env:GITHUB_REF -like 'refs/tags/v*') {
+            $v = $env:GITHUB_REF -replace 'refs/tags/v',''
+          } elseif ($env:INPUT_RELEASE_TAG) {
+            $v = $env:INPUT_RELEASE_TAG -replace '^v',''
+          } else {
+            $v = '1.0.0'
+          }
+          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Write-Host "Building version $v"
+
+      - name: Check the version in the app matches the tag
+        shell: pwsh
+        run: |
+          $src = Get-Content app/version.py -Raw
+          if ($src -notmatch 'APP_VERSION\s*=\s*"([^"]+)"') { throw 'APP_VERSION not found in app/version.py' }
+          $appVer = $Matches[1]
+          $want = '${{ steps.ver.outputs.version }}'
+          Write-Host "app/version.py says $appVer, building $want"
+          if ($appVer -ne $want) {
+            throw "Version mismatch: app/version.py is $appVer but this build is $want. Update APP_VERSION before tagging."
+          }
 
       - name: Install dependencies
         run: |
@@ -23,7 +64,7 @@ jobs:
           pip install pyinstaller==6.11.1
 
       - name: Check the sentence splitter
-        run: python -m unittest discover -s tests -v
+        run: python -m unittest discover -s tests -t . -v
 
       - name: Build the icon
         run: python packaging/make_icon.py
@@ -45,40 +86,55 @@ jobs:
             # No redirection. Redirecting output hands the app the very streams
             # whose absence is the bug being tested for.
             $p = Start-Process -FilePath "dist\LingoGeek\LingoGeek.exe" -WindowStyle Hidden -PassThru
-            Start-Sleep -Seconds 25
+            try {
+              Start-Sleep -Seconds 25
 
-            $out = "$env:LOCALAPPDATA\TechyGeeksHome\LingoGeek\output.txt"
-            $err = "$env:LOCALAPPDATA\TechyGeeksHome\LingoGeek\startup-error.txt"
-            if (Test-Path $err) {
-              Write-Host "startup-error.txt:"; Get-Content $err
+              $out = "$env:LOCALAPPDATA\TechyGeeksHome\LingoGeek\output.txt"
+              $err = "$env:LOCALAPPDATA\TechyGeeksHome\LingoGeek\startup-error.txt"
+              if (Test-Path $err) {
+                Write-Host "startup-error.txt:"; Get-Content $err
+                throw "$label - the app failed to start"
+              }
+              if (-not (Test-Path $out)) { throw "$label - the app never printed its address" }
+
+              $url = (Select-String -Path $out -Pattern 'http://127\.0\.0\.1:\d+/').Matches[0].Value
+              Write-Host "address: $url"
+              $r = Invoke-WebRequest -Uri "${url}api/health" -UseBasicParsing -TimeoutSec 30
+              if ($r.StatusCode -ne 200) { throw "$label - health check returned $($r.StatusCode)" }
+              Write-Host "health: $($r.Content)"
+              $page = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 30
+              if ($page.Content -notmatch 'LingoGeek') { throw "$label - the page did not render" }
+              Remove-Item $out -ErrorAction SilentlyContinue
+              Write-Host "$label : started and served its interface."
+            } finally {
               if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
-              throw "$label - the app failed to start"
+              Start-Sleep -Seconds 2
             }
-            if (-not (Test-Path $out)) {
-              if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
-              throw "$label - the app never printed its address"
-            }
-            $url = (Select-String -Path $out -Pattern 'http://127\.0\.0\.1:\d+/').Matches[0].Value
-            Write-Host "address: $url"
-            $r = Invoke-WebRequest -Uri "${url}api/health" -UseBasicParsing -TimeoutSec 30
-            if ($r.StatusCode -ne 200) { throw "$label - health check returned $($r.StatusCode)" }
-            Write-Host "health: $($r.Content)"
-            $page = Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 30
-            if ($page.Content -notmatch 'LingoGeek') { throw "$label - the page did not render" }
-            if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
-            Remove-Item $out -ErrorAction SilentlyContinue
-            Write-Host "$label - OK"
           }
 
           Invoke-Check 'with a console' $false
           Invoke-Check 'with no console, as a user gets it' $true
 
-      - name: Build the installer
-        run: |
-          iscc /DMyAppVersion=${{ github.ref_type == 'tag' && github.ref_name || '1.0.0' }} packaging\lingogeek.iss
-        shell: cmd
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
 
-      - uses: actions/upload-artifact@v4
+      - name: Build the installer
+        shell: pwsh
+        run: |
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DMyAppVersion=${{ steps.ver.outputs.version }} packaging\lingogeek.iss
+          $inst = Get-Item packaging\Output\LingoGeekSetup.exe
+          Write-Host ("Installer is {0:N1} MB" -f ($inst.Length / 1MB))
+
+      - name: Upload the installer
+        uses: actions/upload-artifact@v4
         with:
-          name: LingoGeekSetup
+          name: LingoGeek-Windows-${{ steps.ver.outputs.version }}
           path: packaging/Output/LingoGeekSetup.exe
+          if-no-files-found: error
+
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/v') || inputs.release_tag != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag != '' && inputs.release_tag || github.ref_name }}
+          files: packaging/Output/LingoGeekSetup.exe
