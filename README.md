@@ -17,6 +17,14 @@
 
 </div>
 
+## 🎬 See it in action
+
+[![LingoGeek demo video](https://img.youtube.com/vi/hOF9UWpFFd8/maxresdefault.jpg)](https://www.youtube.com/watch?v=hOF9UWpFFd8)
+
+A whole document translated, start to finish, in under a minute.
+
+---
+
 ## Why it exists
 
 DeepL's free tier allows **one document translation per month**, up to 5 MB. A second costs
