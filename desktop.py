@@ -8,6 +8,7 @@ import time
 import uvicorn
 import webview
 
+from app.desktop_api import create_window
 from app.main import app
 
 
@@ -24,7 +25,7 @@ def main() -> int:
         daemon=True,
     ).start()
     time.sleep(1.0)
-    webview.create_window("LingoGeek", f"http://127.0.0.1:{port}/", width=1000, height=760)
+    create_window(f"http://127.0.0.1:{port}/")
     webview.start()
     return 0
 

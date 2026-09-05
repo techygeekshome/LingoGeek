@@ -114,7 +114,8 @@ def main() -> int:
 
     try:
         import webview
-        webview.create_window("LingoGeek", url, width=1000, height=760)
+        from app.desktop_api import create_window
+        create_window(url)
         webview.start()
     except Exception:
         failure.append(traceback.format_exc())
