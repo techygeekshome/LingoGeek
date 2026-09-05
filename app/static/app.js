@@ -108,10 +108,42 @@ async function poll() {
 }
 
 const drop = $("drop"), picker = $("picker");
-drop.addEventListener("click", () => picker.click());
+
+// The queue opens the file itself, so it needs a real filesystem path. A plain
+// <input type="file"> cannot supply one in the desktop window: File.path is a
+// non-standard property that WebView2 leaves undefined, so every pick came back
+// empty and nothing reached the queue. When the desktop bridge is there we use
+// the native dialog instead, and the input stays as the fallback for a browser.
+function desktopApi() {
+  return window.pywebview && window.pywebview.api && window.pywebview.api.choose_files
+    ? window.pywebview.api
+    : null;
+}
+
+function pathsFrom(fileList) {
+  return [...fileList].map((f) => f.path).filter(Boolean);
+}
+
+function noPaths() {
+  $("note").textContent = "Could not read that file's location. Try dragging it onto the box instead.";
+}
+
+async function chooseFiles() {
+  const api = desktopApi();
+  if (!api) { picker.click(); return; }
+  try {
+    const paths = await api.choose_files();
+    if (paths && paths.length) send(paths);
+  } catch (err) {
+    picker.click();
+  }
+}
+
+drop.addEventListener("click", chooseFiles);
 picker.addEventListener("change", () => {
-  const paths = [...picker.files].map((f) => f.path).filter(Boolean);
+  const paths = pathsFrom(picker.files);
   if (paths.length) send(paths);
+  else if (picker.files.length) noPaths();
   picker.value = "";
 });
 ["dragenter", "dragover"].forEach((e) =>
@@ -119,8 +151,9 @@ picker.addEventListener("change", () => {
 ["dragleave", "drop"].forEach((e) =>
   drop.addEventListener(e, (ev) => { ev.preventDefault(); drop.classList.remove("over"); }));
 drop.addEventListener("drop", (ev) => {
-  const paths = [...ev.dataTransfer.files].map((f) => f.path).filter(Boolean);
+  const paths = pathsFrom(ev.dataTransfer.files);
   if (paths.length) send(paths);
+  else if (ev.dataTransfer.files.length) noPaths();
 });
 
 $("from").addEventListener("change", () => fillTargets());
