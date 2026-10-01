@@ -9,5 +9,8 @@ Name: "italian"; MessagesFile: "compiler:Languages\Italian.isl"
 [CustomMessages]
 english.CreateDesktopIcon=Create a &desktop shortcut
 english.AdditionalIcons=Shortcuts:
+english.LaunchProgram=Run {#MyAppName}
 italian.CreateDesktopIcon=Crea un collegamento sul &desktop
 italian.AdditionalIcons=Collegamenti:
+italian.NameAndVersion={#MyAppName} {#MyAppVersion}
+italian.LaunchProgram=Esegui {#MyAppName}
