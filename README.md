@@ -34,6 +34,16 @@ exactly what you cannot do with a contract, a medical letter, an HR file or anyt
 The translation models are free and openly licensed. The thing that did not exist was a Windows
 app that puts one in front of you without a meter attached. That is all LingoGeek is.
 
+## 📸 Screenshots
+
+<p float="left">
+  <img src="https://raw.githubusercontent.com/techygeekshome/LingoGeek/main/docs/screenshots/01-translate.png" width="49%" />
+  <img src="https://raw.githubusercontent.com/techygeekshome/LingoGeek/main/docs/screenshots/02-queue.png" width="49%" />
+</p>
+<p float="left">
+  <img src="https://raw.githubusercontent.com/techygeekshome/LingoGeek/main/docs/screenshots/03-done.png" width="49%" />
+</p>
+
 ## What it does
 
 - Translates **Word documents, PDFs, subtitle files, Markdown and plain text**
