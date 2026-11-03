@@ -13,6 +13,8 @@
 [![Made by TechyGeeksHome](https://img.shields.io/badge/made%20by-TechyGeeksHome-b191f2)](https://techygeekshome.info)
 [![Support on Ko-fi](https://img.shields.io/badge/support-Ko--fi-ff5e5b)](https://ko-fi.com/techygeekshome)
 
+<a href="https://sourceforge.net/projects/lingogeek/"><img alt="LingoGeek won a SourceForge Rising Star award" src="https://sourceforge.net/cdn/syndication/badge_img/4135098/oss-rising-star-white?achievement=oss-rising-star" width="125"></a>
+
 [Download](#download) · [What it does](#what-it-does) · [Formats](#what-it-does-with-each-kind-of-file) · [Languages](#languages) · [Requirements](#requirements)
 
 </div>
